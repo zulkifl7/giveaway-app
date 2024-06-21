@@ -1,7 +1,9 @@
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
-from tkinter import Tk, Button, Label, Canvas, messagebox
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import PRIMARY, SUCCESS
+from tkinter import messagebox
 import threading
 import time
 
@@ -50,24 +52,25 @@ def show_loading_and_selection(attendees):
     visualize_selection(attendees, winner)
     messagebox.showinfo("Winner", f"The winner is: {winner}")
 
-# Create the main window
-root = Tk()
+# Create the main window with ttkbootstrap style
+root = ttk.Window(themename="litera")
 root.title("Random Winner Selection")
+root.geometry("500x300")
 
 # Create and place the Start button
-start_button = Button(root, text="Start", command=start_selection, font=("Arial", 16), bg="green", fg="white")
+start_button = ttk.Button(root, text="Start", command=start_selection, bootstyle=SUCCESS, width=20)
 start_button.pack(pady=20)
 
 # Create and place the Label
-label = Label(root, text="Press 'Start' to select a random winner", font=("Arial", 14))
+label = ttk.Label(root, text="Press 'Start' to select a random winner", font=("Arial", 14))
 label.pack(pady=10)
 
 # Create a canvas for the loading screen animation
-canvas = Canvas(root, width=400, height=200)
-canvas.pack()
+canvas = ttk.Canvas(root, width=400, height=100)
+canvas.pack(pady=20)
 
 # Create a label for displaying names during loading animation
-loading_label = canvas.create_text(200, 100, text="", font=("Arial", 24))
+loading_label = canvas.create_text(200, 50, text="", font=("Arial", 24))
 
 # Run the GUI event loop
 root.mainloop()
