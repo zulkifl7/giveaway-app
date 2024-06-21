@@ -9,19 +9,44 @@ import webbrowser
 import urllib.parse
 import pyautogui
 
-# Function to read attendee names and mobile numbers from a CSV file
+#! Function to read attendee names and mobile numbers from a CSV file
 def read_attendees_from_csv(file_path):
+    """
+    Reads attendee names and mobile numbers from a CSV file.
+
+    Args:
+    - file_path (str): Path to the CSV file containing attendee data.
+
+    Returns:
+    - list: A list of tuples containing attendee name and mobile number.
+    """
     df = pd.read_csv(file_path)
     attendees = df[['Name', 'Mobile Number']].values.tolist()
     return attendees
 
-# Function to select a random winner
+#! Function to select a random winner
 def select_winner(attendees):
+    """
+    Randomly selects a winner from a list of attendees.
+
+    Args:
+    - attendees (list): List of tuples containing attendee name and mobile number.
+
+    Returns:
+    - tuple: A tuple containing winner's name and mobile number.
+    """
     winner = random.choice(attendees)
     return winner[0], winner[1]  # Return name and mobile number
 
-# Visual representation of the selection process using a pie chart
+#! Visual representation of the selection process using a pie chart
 def visualize_selection(attendees, winner_name):
+    """
+    Creates a pie chart to visualize the selection probability of each attendee.
+
+    Args:
+    - attendees (list): List of tuples containing attendee name and mobile number.
+    - winner_name (str): Name of the randomly selected winner.
+    """
     # Count occurrences of each attendee
     counts = {attendee[0]: 0 for attendee in attendees}
     for attendee in attendees:
@@ -41,24 +66,43 @@ def visualize_selection(attendees, winner_name):
     plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     plt.show()
 
-# Function to display the loading screen
+#! Function to display the loading screen
 def show_loading_screen(attendees, canvas, label, root):
+    """
+    Displays a loading animation while processing attendee data.
+
+    Args:
+    - attendees (list): List of tuples containing attendee name and mobile number.
+    - canvas (tkinter.Canvas): Canvas widget for displaying loading animation.
+    - label (tkinter.Text): Text object within the canvas to update with attendee names.
+    - root (tkinter.Tk): Main Tkinter window object.
+    """
     for _ in range(10):  # Loop to create a simple loading animation
         for name, _ in attendees:
             canvas.itemconfig(label, text=name)
             root.update_idletasks()
             time.sleep(0.1)
 
-# Function to start the winner selection process
+#! Function to start the winner selection process
 def start_selection():
+    """
+    Initiates the process of selecting a random winner from attendees.
+    Reads attendee data from a CSV file, shows a loading screen, and then displays the winner.
+    """
     attendees = read_attendees_from_csv('attendees.csv')
     if attendees:
         threading.Thread(target=show_loading_and_selection, args=(attendees,)).start()  # Start loading screen animation in a separate thread
     else:
         messagebox.showwarning("No Attendees", "No attendees found in the CSV file.")
 
-# Function to handle loading animation and selection process
+#! Function to handle loading animation and selection process
 def show_loading_and_selection(attendees):
+    """
+    Manages the loading animation and winner selection process.
+    
+    Args:
+    - attendees (list): List of tuples containing attendee name and mobile number.
+    """
     show_loading_screen(attendees, canvas, loading_label, root)
     winner_name, winner_mobile = select_winner(attendees)
     canvas.itemconfig(loading_label, text=winner_name)  # Display the winner's name on the canvas
@@ -69,13 +113,20 @@ def show_loading_and_selection(attendees):
     
     if confirm_send:
         send_whatsapp_message(winner_mobile, winner_name)
-
         # Notify user that message has been sent
         messagebox.showinfo("Message Sent", f"Message sent to {winner_name} on WhatsApp.")
     else:
         messagebox.showinfo("Message Not Sent", "Message sending canceled.")
 
+#! Function to send WhatsApp message to the winner
 def send_whatsapp_message(mobile_number, winner_name):
+    """
+    Opens WhatsApp Web with a pre-filled message to the winner's mobile number.
+
+    Args:
+    - mobile_number (str): Mobile number of the winner.
+    - winner_name (str): Name of the winner.
+    """
     message = f"Hello {winner_name}, you are selected to join our 'Learn Python in 16 days' course!"
 
     # Encode message for URL
@@ -92,6 +143,7 @@ def send_whatsapp_message(mobile_number, winner_name):
 
     pyautogui.press('enter')  # Press enter to send the message
 
+#! Main GUI setup and event loop
 # Create the main window with ttkbootstrap style
 root = ttk.Window(themename="flatly")
 root.title("Random Winner Selection")
