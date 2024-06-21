@@ -6,6 +6,8 @@ from tkinter import messagebox, simpledialog
 import threading
 import time
 import webbrowser
+import urllib.parse
+import pyautogui
 
 # Function to read attendee names and mobile numbers from a CSV file
 def read_attendees_from_csv(file_path):
@@ -74,8 +76,21 @@ def show_loading_and_selection(attendees):
         messagebox.showinfo("Message Not Sent", "Message sending canceled.")
 
 def send_whatsapp_message(mobile_number, winner_name):
-    # Open WhatsApp Web
-    webbrowser.open(f"https://web.whatsapp.com/send?phone={mobile_number}&text=Hello%20{winner_name},%20you%20are%20selected%20to%20join%20our%20'Learn%20Python%20in%2016%20days'%20course!%20")
+    message = f"Hello {winner_name}, you are selected to join our 'Learn Python in 16 days' course!"
+
+    # Encode message for URL
+    encoded_message = urllib.parse.quote(message)
+
+    # Open WhatsApp Web with pre-filled message
+    webbrowser.open(f"https://web.whatsapp.com/send?phone={mobile_number}&text={encoded_message}")
+
+    # Note: Manually sending the message is required by the user due to restrictions in automation.
+    # to bypass this we are using pyauto gui for press enter
+
+    # Wait for the browser to load (adjust sleep time as needed)
+    time.sleep(10)
+
+    pyautogui.press('enter')  # Press enter to send the message
 
 # Create the main window with ttkbootstrap style
 root = ttk.Window(themename="flatly")
