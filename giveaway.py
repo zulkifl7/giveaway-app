@@ -1,7 +1,9 @@
 import random
 import pandas as pd
 import matplotlib.pyplot as plt
-from tkinter import Tk, Button, Label, messagebox
+from tkinter import Tk, Button, Label, Canvas, messagebox
+import threading
+import time
 
 # Function to read attendee names from a CSV file
 def read_attendees_from_csv(file_path):
@@ -24,15 +26,28 @@ def visualize_selection(attendees, winner):
     plt.title('Random Winner Selection')
     plt.show()
 
+# Function to display the loading screen
+def show_loading_screen(attendees, canvas, label):
+    for _ in range(10):  # Loop to create a simple loading animation
+        for name in attendees:
+            canvas.itemconfig(label, text=name)
+            root.update_idletasks()
+            time.sleep(0.1)
+
 # Function to start the winner selection process
 def start_selection():
     attendees = read_attendees_from_csv('attendees.csv')
     if attendees:
-        winner = select_winner(attendees)
-        visualize_selection(attendees, winner)
-        messagebox.showinfo("Winner", f"The winner is: {winner}")
+        threading.Thread(target=show_loading_and_selection, args=(attendees,)).start()  # Start loading screen animation in a separate thread
     else:
         messagebox.showwarning("No Attendees", "No attendees found in the CSV file.")
+
+# Function to handle loading animation and selection process
+def show_loading_and_selection(attendees):
+    show_loading_screen(attendees, canvas, loading_label)
+    winner = select_winner(attendees)
+    visualize_selection(attendees, winner)
+    messagebox.showinfo("Winner", f"The winner is: {winner}")
 
 # Create the main window
 root = Tk()
@@ -46,5 +61,13 @@ start_button.pack(pady=20)
 label = Label(root, text="Press 'Start' to select a random winner", font=("Arial", 14))
 label.pack(pady=10)
 
+# Create a canvas for the loading screen animation
+canvas = Canvas(root, width=400, height=200)
+canvas.pack()
+
+# Create a label for displaying names during loading animation
+loading_label = canvas.create_text(200, 100, text="", font=("Arial", 24))
+
 # Run the GUI event loop
 root.mainloop()
+
