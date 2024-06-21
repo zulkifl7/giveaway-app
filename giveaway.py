@@ -57,16 +57,19 @@ root = ttk.Window(themename="flatly")
 root.title("Random Winner Selection")
 root.geometry("600x400")
 
-# Create and place the Start button with rounded style and larger text
+# Set transparency level (0-1, 0 being fully transparent)
+root.attributes('-alpha', 0.9)
+
+# Create and place the Start button with modern style
 start_button = ttk.Button(root, text="Start", command=start_selection, style="success.TButton", width=20)
 start_button.pack(pady=20)
 
-# Customize button style for sci-fi look
+# Customize button style for modern look
 style = ttk.Style()
-style.configure('success.TButton', foreground='white', background='#4CAF50', font=('Arial', 16), borderwidth=5, relief='raised', padding=10, border_radius=20)
+style.configure('success.TButton', foreground='white', background='#4CAF50', font=('Helvetica', 16), borderwidth=5, relief='raised', padding=10, border_radius=10)
 
-# Create and place the Label with larger font
-label = ttk.Label(root, text="Press 'Start' to select a random winner", font=("Helvetica", 18))
+# Create and place the Label with modern font
+label = ttk.Label(root, text="Press 'Start' to select a random winner", font=("Helvetica", 14))
 label.pack(pady=10)
 
 # Create a canvas for the loading screen animation
@@ -74,7 +77,7 @@ canvas = ttk.Canvas(root, width=500, height=100)
 canvas.pack(pady=20)
 
 # Create a label for displaying names during loading animation
-loading_label = canvas.create_text(250, 50, text="", font=("Helvetica", 24))
+loading_label = canvas.create_text(250, 50, text="", font=("Helvetica", 20))
 
 # Run the GUI event loop
 root.mainloop()
