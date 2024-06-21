@@ -1,0 +1,9 @@
+plan.py
+dist/
+build/
+*.spec
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+attendees.csv
