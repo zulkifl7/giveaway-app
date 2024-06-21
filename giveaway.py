@@ -27,7 +27,7 @@ def visualize_selection(attendees, winner):
     plt.show()
 
 # Function to display the loading screen
-def show_loading_screen(attendees, canvas, label):
+def show_loading_screen(attendees, canvas, label, root):
     for _ in range(10):  # Loop to create a simple loading animation
         for name in attendees:
             canvas.itemconfig(label, text=name)
@@ -44,8 +44,9 @@ def start_selection():
 
 # Function to handle loading animation and selection process
 def show_loading_and_selection(attendees):
-    show_loading_screen(attendees, canvas, loading_label)
+    show_loading_screen(attendees, canvas, loading_label, root)
     winner = select_winner(attendees)
+    canvas.itemconfig(loading_label, text=winner)  # Display the winner's name on the canvas
     visualize_selection(attendees, winner)
     messagebox.showinfo("Winner", f"The winner is: {winner}")
 
