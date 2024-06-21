@@ -12,7 +12,7 @@ def read_attendees_from_csv(file_path):
     - list: A list of tuples containing attendee name and mobile number.
     """
     df = pd.read_csv(file_path)
-    attendees = df[['Name', 'Mobile Number']].values.tolist()
+    attendees = df[['Name', 'WhatsApp Number']].values.tolist()
     return attendees
 
 def select_winner(attendees):
